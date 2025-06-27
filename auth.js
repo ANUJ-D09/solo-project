@@ -5,7 +5,7 @@ const JWT_SECRET = "ShreeJagnnath"
 function auth(req, res, next) {
     const token = req.headers['token'];
     if (!token) {
-        res.status(500).json("missing token");
+        res.status(401).json("missing token");
         return;
     }
     try {

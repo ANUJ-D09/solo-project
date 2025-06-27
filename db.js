@@ -14,12 +14,10 @@ const User = new Schema({
 const Expense = new Schema({
     expense: String,
     expenseType: Boolean,
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: "users"
-    },
+    userId: String,
     amount: Number,
     reason: String
+
 
 });
 const UserModel = mongoose.model("users", User);

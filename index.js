@@ -12,13 +12,13 @@ const {
     ExpenseModel
 } = require('./db');
 const mongoose = require("mongoose");
-
 app.use(express.json());
 
 
 app.use('/expense', expenseRoutes);
 
 app.post('/signup', Incomingrequest, async function(req, res) {
+
 
     const requireBody = z.object({
         email: z.string().min(6).max(50).email(),
@@ -67,7 +67,7 @@ app.post('/signin', async function(req, res) {
             res.status(404).json("user not found");
         }
         const passwordValid = await bcrypt.compare(password, foundUser.password);
-        if (!isPasswordValid) {
+        if (!passwordValid) {
             return res.status(401).json({ message: "Oops! That didn’t match our records" });
         }
         const token = jwt.sign({ userId: foundUser._id }, JWT_SECRET, {
