@@ -1,8 +1,13 @@
 const express = require('express')
 const router = express.Router();
+const ExpenseModel = require('./db')
+const { auth } = require('./auth');
 
-router.post('/', function(req, res) {
-    res.json("testing");
+
+
+
+router.post('/', auth, function(req, res) {
+
 })
 router.get('/', function(req, res) {
     res.json("testing");

@@ -6,6 +6,7 @@ const z = require('zod')
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = "ShreeJagnnath"
 const bcrypt = require('bcrypt')
+const rateLimit = require('express-rate-limit');
 const {
     UserModel,
     ExpenseModel
@@ -17,7 +18,7 @@ app.use(express.json());
 
 app.use('/expense', expenseRoutes);
 
-app.post('/signup', async function(req, res) {
+app.post('/signup', Incomingrequest, async function(req, res) {
 
     const requireBody = z.object({
         email: z.string().min(6).max(50).email(),
@@ -58,17 +59,34 @@ app.post('/signup', async function(req, res) {
 
 
 
-app.post('/signin', function(req, res) {
-    res.json("signin route working");
+app.post('/signin', async function(req, res) {
+    const { password, email } = req.body;
+    try {
+        const foundUser = await UserModel.findOne({ email })
+        if (!foundUser) {
+            res.status(404).json("user not found");
+        }
+        const passwordValid = await bcrypt.compare(password, foundUser.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Oops! That didn’t match our records" });
+        }
+        const token = jwt.sign({ userId: foundUser._id }, JWT_SECRET, {
+            expiresIn: '1h',
+        });
+
+
+        res.json({ message: "You are signed in. Enjoy!", token });
+
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "error" })
+    }
+
 });
 
 
 
-function auth(req, res, next) {
-
-    console.log("Auth middleware triggered");
-    next();
-}
 
 function Incomingrequest(req, res, next) {
     const log = `[${new Date().toISOString()}] ${req.method} ${req.url}`;
@@ -77,9 +95,14 @@ function Incomingrequest(req, res, next) {
     next();
 }
 
-function RateLimmiter(req, res, next) {
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 100,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
 
-}
+})
+
 
 
 app.listen(port, () => {
