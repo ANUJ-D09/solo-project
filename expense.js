@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router();
 const { ExpenseModel } = require('./db');
-
 const { auth } = require('./auth');
 const z = require('zod');
 

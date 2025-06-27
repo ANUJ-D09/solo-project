@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Welcome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .btn-primary {
+            background-color: #B13BFF;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #9900ff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body class="bg-[#090040] min-h-screen flex items-center justify-center p-4">
+    <div class="bg-violet-300 w-full max-w-md border-4 border-[#B13BFF] rounded-2xl p-8 shadow-lg text-center space-y-6">
+        <h1 class="text-cyan-800 font-mono text-2xl">
+            Welcome to Expense Tracker!<br> Manage your finances easily
+        </h1>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button onclick="window.location.href='signin.html'" class="btn-primary text-white font-semibold py-2 px-6 rounded-xl">
+                Sign In
+            </button>
+            <button onclick="window.location.href='signup.html'" class="btn-primary text-white font-semibold py-2 px-6 rounded-xl">
+                Sign Up
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>

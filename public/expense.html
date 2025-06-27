@@ -3,13 +3,141 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>expense sheet</title>
+    <title>My Expenses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-[#B1F0F7] min-h-screen p-4">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-cyan-800">My Expenses</h1>
+            <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                Logout
+            </button>
+        </header>
 
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Add Expense Form -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-4 text-cyan-800">Add New Expense</h2>
+                <form id="expenseForm" class="space-y-4">
+                    <input id="expense" type="text" placeholder="Expense Name" class="w-full p-3 border rounded-lg" required>
+                    <select id="expenseType" class="w-full p-3 border rounded-lg">
+                        <option value="false">Debit (Payment)</option>
+                        <option value="true">Credit (Income)</option>
+                    </select>
+                    <input id="amount" type="number" placeholder="Amount" class="w-full p-3 border rounded-lg" required>
+                    <input id="reason" type="text" placeholder="Reason/Description" class="w-full p-3 border rounded-lg">
+                    <button type="submit" class="bg-[#B13BFF] hover:bg-[#9900ff] text-white w-full py-3 rounded-lg">
+                        Add Expense
+                    </button>
+                </form>
+            </div>
+
+            <!-- Expenses List -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-4 text-cyan-800">Recent Expenses</h2>
+                <div id="expensesList" class="space-y-3">
+                    <!-- Expenses will be loaded here -->
+                    <p class="text-center text-gray-500">Loading expenses...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'signin.html';
+                return;
+            }
+            loadExpenses();
+        });
+
+        // Handle form submission
+        document.getElementById('expenseForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3012/expense', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        expense: document.getElementById('expense').value,
+                        expenseType: document.getElementById('expenseType').value,
+                        amount: parseFloat(document.getElementById('amount').value),
+                        reason: document.getElementById('reason').value
+                    })
+                });
+
+                if (response.ok) {
+                    document.getElementById('expenseForm').reset();
+                    loadExpenses();
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Failed to add expense');
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Network error. Please try again.');
+            }
+        });
+
+        // Load expenses from API
+        async function loadExpenses() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            try {
+                const response = await fetch('http://localhost:3012/expense', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                const expensesList = document.getElementById('expensesList');
+
+                if (data.expense && data.expense.length > 0) {
+                    expensesList.innerHTML = data.expense.map(exp => `
+                        <div class="p-3 border-b flex justify-between items-center">
+                            <div>
+                                <h3 class="font-medium">${exp.expense}</h3>
+                                <p class="text-sm text-gray-600">${exp.reason || 'No description'}</p>
+                            </div>
+                            <span class="${exp.expenseType ? 'text-green-600' : 'text-red-600'} font-semibold">
+                                ${exp.expenseType ? '+' : '-'}₹${exp.amount}
+                            </span>
+                        </div>
+                    `).join('');
+                } else {
+                    expensesList.innerHTML = '<p class="text-center text-gray-500">No expenses found</p>';
+                }
+            } catch (err) {
+                console.error('Error loading expenses:', err);
+                document.getElementById('expensesList').innerHTML =
+                    '<p class="text-center text-red-500">Error loading expenses</p>';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'signin.html';
+        }
+    </script>
 </body>
 
 </html>
