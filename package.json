@@ -1,0 +1,17 @@
+{
+  "name": "soloproject",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ANUJ-D09/solo-project.git",
+  "author": "anujda09 <anujdamani9@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.1",
+    "nodemon": "^3.1.10",
+    "router": "^2.2.0",
+    "zod": "^3.25.67"
+  }
+}
