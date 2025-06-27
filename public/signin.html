@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signin form</title>
+</head>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<body class="bg-[#090040] min-h-screen flex items-center justify-center">
+    <div class="bg-violet-300 w-full max-w-md border-4 border-[#B13BFF] rounded-2xl p-8 shadow-lg text-center space-y-6">
+        <h1 class="text-cyan-800 font-mono text-2xl">Sign In</h1>
+
+        <form class="flex flex-col py-4 items-center justify-center gap-6">
+
+            <input class="text-center text-cyan-800 py-2 px-6 font-mono border border-[#B13BFF] rounded-2xl" id="signin_email" type="email" placeholder="Email" required>
+            <input class="text-center text-cyan-800 py-2 px-6 font-mono border border-[#B13BFF] rounded-2xl" id="signin_password" type="password" placeholder="Password" required>
+            <button type="submit" class="bg-[#B13BFF] hover:bg-[#9900ff] text-white font-semibold py-2 px-6 border border-[#B13BFF] rounded-xl transition duration-300">
+        Submit
+      </button>
+        </form>
+    </div>
+</body>
+
+</html>
